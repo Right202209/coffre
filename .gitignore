@@ -1,0 +1,38 @@
+# Local worktrees and preserved repository history.
+/.worktrees/
+/.agents/
+/.codex/
+/.aws/
+
+# Herdr-generated SDK files; keep handwritten types.d.ts.
+**/mods/**/gpui-kit.d.ts
+**/mods/**/herdr.d.ts
+**/mods/**/jsconfig.json
+*.error
+
+# Dependencies, caches and local test artifacts.
+node_modules/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.test-artifacts/
+coverage/
+*.log
+.DS_Store
+
+# Personal app data and credentials do not belong in mod bundles.
+.env
+.env.*
+!.env.example
+/data/
+/layouts/.state/
+/shared.json
+/view.json
+/seen.json
+/installed.json
+/window.json
+/windows.json
+/settings.json
+/programs.json
+/agent-launch-profiles.json

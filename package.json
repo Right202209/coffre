@@ -1,0 +1,15 @@
+{
+  "name": "herdr-mods",
+  "private": true,
+  "type": "module",
+  "description": "Native Herdr mod bundles: agent profiles, SFTP and system status.",
+  "engines": {
+    "node": ">=22.15.0"
+  },
+  "scripts": {
+    "check": "bash scripts/check.sh",
+    "test": "npm run test:js && npm run test:python",
+    "test:js": "node --test --test-isolation=none agent-profiles/mods/agent-profiles/tests/*.test.mjs && node --test sftp/tests/*.test.js && node --test system-status/mods/system-status/tests/*.test.mjs",
+    "test:python": "bash scripts/test-python.sh"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "place": "none",
+  "title": "SFTP 文件传输",
+  "focusable": true,
+  "overlay": { "kind": "dialog", "width": 1120, "height": 650 }
+}

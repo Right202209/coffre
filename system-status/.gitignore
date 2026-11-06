@@ -1,0 +1,3 @@
+# Herdr regenerates these when it checks or loads a mod.
+gpui-kit.d.ts
+jsconfig.json
