@@ -1,6 +1,6 @@
 import { View, div, svg } from "gpui-kit";
 import { h_flex, v_flex } from "gpui-base";
-import { hc, theme, layout, run, props, focused, spaces, machines, panes, shared, setShared, nextCommand } from "herdr";
+import { hc, theme, layout, run, props, focused, spaces, machines, panes, shared, setShared, nextCommand, settings } from "herdr";
 import { collect } from "./collectors.js";
 import { Coordinator } from "./coordinator.js";
 import { currentTarget, panelVisible } from "./context.js";
@@ -18,7 +18,7 @@ export default class SystemStatus extends View {
     this.graphPending = false; this.paused = false; this.closed = false;
     this.activeTab = shared("system-status.tab") === "files" ? "files" : "overview";
     this.handles = Array.from({ length: 5 }, () => cx.focus_handle());
-    this.files = new FileBrowser(cx, this.options.language);
+    this.files = new FileBrowser(cx, this.options.language, () => this.context().target);
     this.heartbeat = 0; this.lastContext = "";
     this.tick(cx);
     // Only lifecycle bookkeeping runs while hidden, because Herdr has no exposure event.
@@ -130,7 +130,9 @@ export default class SystemStatus extends View {
     const root = v_flex().id("system-status-root").size_full().min_w(0).overflow_hidden()
       .bg(t.chrome).text_color(t.foreground).text_size(11)
       .on_size_change((size, cx) => {
-        if (this.width !== size.width) { this.width = size.width; cx.notify(); }
+        // Size events use window pixels; layout breakpoints use unzoomed ones.
+        const width = size.width / (Number(settings()?.zoom) || 1);
+        if (this.width !== width) { this.width = width; cx.notify(); }
       })
       .on_key_down((e, cx) => {
         if (e.keystroke === "r" && this.handles.some(handle => handle.is_focused())) { cx.stop_propagation(); this.refresh(cx); }
@@ -152,7 +154,8 @@ export default class SystemStatus extends View {
     if (this.activeTab === "files") return root
       .child(this.files.render(t, this.width ?? 344))
       .child(h_flex().h(27).flex_none().px(12).items_center().min_w(0).border_t(0.5).border_color(t.border)
-        .child(div().text_color(t.muted).truncate().child(this.files.status())));
+        .child(div().min_w(0).truncate().text_color(this.files.dragging() ? t.accent : t.muted)
+          .tooltip(l.filesHint).child(this.files.status())));
     const body = v_flex().id("overview-panel").role("tab_panel").accessibility_label(l.overview)
       .flex_1().min_h(0).min_w(0).p(12).gap(8).overflow_y_scrollbar();
     const machineName = target.machine == null ? l.local : target.name;

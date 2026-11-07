@@ -3,7 +3,7 @@ import { h_flex, v_flex } from "gpui-base";
 import { metricColors, networkScale } from "./charts.js";
 import { valid, clamp, percentage, formatBytes, formatUptime } from "./metrics.js";
 
-function faded(color, opacity) {
+export function faded(color, opacity) {
   if (!/^#[\da-f]{6}([\da-f]{2})?$/i.test(color)) return color;
   const alpha = color.length === 9 ? parseInt(color.slice(7), 16) : 255;
   return color.slice(0, 7) + Math.round(opacity * alpha).toString(16).padStart(2, "0");

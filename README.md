@@ -1,12 +1,14 @@
 # Herdr mods
 
-三个可独立安装的原生 [Herdr](https://herdr.dev/) mod，使用 gpui-kit / gpui-base / herdr API。每个一级目录都是符合 Herdr 分享规范的完整包。
+三个可独立安装的原生 [Herdr](https://herdr.dev/) mod，使用 [gpui-kit](https://gpui-kit.com/) / gpui-base / herdr API。每个包都包含安装说明、构建配方、原生界面预览和测试。
 
 | Mod | 功能 | 文档 |
 | --- | --- | --- |
 | Agent profiles | 管理 agent 启动参数、保存命名配置、拖动排序与快捷启动 | [安装与使用](agent-profiles/README.md) · [构建说明](agent-profiles/RECIPE.md) |
 | SFTP | SSH 连接、本地/远程双栏文件浏览、上传下载和传输队列 | [安装与使用](sftp/README.md) · [构建说明](sftp/RECIPE.md) |
-| 系统状态 | 当前 space 所在机器的系统指标，以及独立的本机文件浏览器 | [安装与使用](system-status/README.md) · [构建说明](system-status/RECIPE.md) |
+| 系统状态 | 当前机器的系统指标、按 machine 保存位置的文件树、拖放移动与右键操作 | [安装与使用](system-status/README.md) · [构建说明](system-status/RECIPE.md) |
+
+系统文件树随当前 machine 切换；同一 machine 内切换终端、会话或 space，浏览位置保持不变。文件树中的复制和移动在该机器内执行；本机与远程之间的上传、下载使用 SFTP mod。
 
 ## 目录
 
@@ -64,7 +66,7 @@ herdr-app do mod.open --name agent-profiles
 
 - **Agent profiles**：读取已安装 agent，读写 app home 的 `programs.json`、`agent-launch-profiles.json` 和共享状态；通过 Herdr 命令启动所选程序。
 - **SFTP**：运行 `hc`、Python 和 OpenSSH，读取 SSH 配置及所选目录，连接用户指定的 SSH/SFTP 服务器并传输文件；任务记录写入 app home 的 `data/sftp/`。
-- **系统状态**：通过 `hc exec` 在当前机器采集系统信息；文件标签在本机读取目录，并按操作运行复制或移动命令；图表缓存写入 app home 的 `data/system-status/`。
+- **系统状态**：通过 `hc exec` 在对应 machine 采集系统信息、读取目录，并按用户操作运行 `cp` / `mv`；远程通过 Herdr 已注册的机器连接执行。图表缓存写入 app home 的 `data/system-status/`。
 
 ## 开发与验证
 
@@ -85,8 +87,14 @@ npm run check      # 分享包必需文件 + 每个 mod 的 herdr-app check
 
 更多开发约定见 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
-## 分享
+## 参考与致谢
 
-发布到公开 GitHub 仓库时添加 topic `herdr-mod`。Herdr 支持同一仓库内多个独立包，索引通常在一小时内更新；分享时指向具体包目录。
+感谢以下项目的作者和维护者提供的基础设施与交互参考：
 
-仓库只存源码、文档、预览和测试。个人配置、连接信息、运行数据、虚拟环境及 `.worktrees/` 留在本机。首次整理时保留的 SFTP 原仓库在 `.worktrees/sftp-origin/`，原开发 worktree 在 `.worktrees/sftp-panel/`；当前包来自提交 `704c2ee`，这些本地备份不随克隆分发。
+- [Herdr](https://herdr.dev/)：提供 mod 运行环境、终端与机器管理，以及随应用提供的 API 文档和示例 mod。
+- [gpui-kit](https://gpui-kit.com/)：提供原生 GPUI 的 JavaScript 界面组件与布局能力，本仓库的面板使用 Herdr 随附版本。
+- [Netcatty](https://github.com/binaricat/Netcatty)，特别是其 [SFTP 页面](https://github.com/binaricat/Netcatty/tree/main/components/sftp)：为 SFTP mod 的本地／远程双栏浏览和传输交互提供参考，详见 [SFTP 说明](sftp/README.md)。
+
+## License
+
+MIT

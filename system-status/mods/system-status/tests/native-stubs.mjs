@@ -1,7 +1,9 @@
 // Minimal host state for controller tests. Rendering is checked by herdr-app.
-export const host = { calls: [], spaces: [], saved: {}, handler: null };
+export const host = { calls: [], spaces: [], saved: {}, handler: null, zoom: 1, platform: "linux" };
 export const hc = args => { host.calls.push(args); return host.handler(args); };
 export const spaces = () => host.spaces;
+export const settings = () => ({ zoom: host.zoom });
+export const window = () => ({ platform: host.platform });
 export const shared = key => host.saved[key];
 export const setShared = (key, value) => { host.saved[key] = value; };
 export const div = () => { throw new Error("Use the native renderer for UI tests"); };
@@ -17,7 +19,7 @@ export const InputState = {
 export const VirtualListScrollHandle = { new: () => ({ scroll_to_item() {}, release() {} }) };
 export function context() {
   const tasks = [];
-  return { tasks, notices: 0, clipboard: "", notify() { this.notices++; },
+  return { tasks, notices: 0, clipboard: "", notify() { this.notices++; }, stop_propagation() {},
     focus_handle: () => ({ focus() {}, release() {}, is_focused: () => false }),
     spawn(body) { const task = Promise.resolve().then(() => body(this)); tasks.push(task); return task; },
     write_to_clipboard(text) { this.clipboard = text; },
